@@ -1,17 +1,22 @@
-// THIS IS A PERSONAL VERSION OF PLAGIARIMS DETECTION ALGORITHM
-// USED FOR RESEARCH  
+// THIS IS A PERSONAL VERSION OF PLAGIARISM DETECTION ALGORITHM
+// DEVELOPED FOR RESEARCH PURPOSES
 //
 // developer: Isnardo Reducindo
 // email: isnardo.reducindo@uaslp.mx
-// institution: Universidad Autónoma de San Luis Potosí
-//              Facultad de Ciencias de la Información
-// groupwork: Cuerpo Académico de Curriculum, Enseñanza de las Ciencias y Tecnologías para la Educación
+// institution: Universidad AutÃ³noma de San Luis PotosÃ­
+//              Facultad de Ciencias de la InformaciÃ­n
+// groupwork: Cuerpo AcadÃ©mico de Curriculum, EnseÃ±anza de las Ciencias y TecnologÃ­as para la EducaciÃ³n
+
+1. Para instalar correctamente el algoritmo, revise en la carpeta de 'config' el archivo de instalaciÃ³n correspondiente.
+
+2. Los parÃ¡metros de configuraciÃ³n del algoritmo, se pueden modificar en la carpeta config en el archivo settings.xml
+
+3.
 
 
 
-
-
-
+// -------------------------------
+// ORIGINAL README
 
 This system is the implementation as detail in [1] and [2] for the Text Alignment task at PAN 2015
 
@@ -81,7 +86,6 @@ We state this note in order to facilitate the reusing of this method outside the
 
 *** For more questions do not hesitate to contact us! ***
 
-Miguel Ángel Sánchez Pérez <masp1988(?)hotmail.com>
+Miguel ï¿½ngel Sï¿½nchez Pï¿½rez <masp1988(?)hotmail.com>
 Alexander Gelbukh <gelbukh(?)gelbukh.com>
 Grigori Sidorov <sidorov(?)cic.ipn.mx>
-
