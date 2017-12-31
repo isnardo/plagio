@@ -1,0 +1,22 @@
+The system is described in the following papers:
+
+ 1. Sanchez-Perez, M.A., Gelbukh, A., Sidorov, G.: 
+    Adaptive algorithm for plagiarism detection: The best-performing approach at PAN 2014 text alignment competition.
+    Lecture Notes in Computer Science, vol. 9283, Springer, 2015, pp. 402-413.
+
+ 2. Sanchez-Perez, M.A., Gelbukh, A.F., Sidorov, G.: 
+    Dynamically adjustable approach through obfuscation type recognition. 
+    Working Notes of CLEF 2015 - Conference and Labs of the Evaluation forum, Toulouse, France, September 8-11, 2015. 
+    CEUR Workshop Proceedings, vol. 1391, CEUR-WS.org, 2015, http://ceur-ws.org/Vol-1391/92-CR.pdf.
+
+License: free for non-commercial academic purposes. 
+
+Any publication that benefited from these data or software must state the origin of the data and software and cite the abovementioned paper. 
+
+We will be grateful to you if you let us know of the use of the data or software and of citing our papers. 
+
+Any derived work should specify the original source and its authors and contain this license, including the publication references mentioned above. 
+
+If you modify this corpus or software, correct errors in it, or add annotation/functionality to it, we will be grateful if you send us the new version, to be available from this site. 
+
+See also individual license files or comments in the specific files, if any.

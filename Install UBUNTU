@@ -1,0 +1,24 @@
+1. Intall python pip
+
+$ sudo su 
+$ apt-get update
+$ apt-get -y install python-pip
+$ pip --help
+$ pip -V
+$ python -m pip install --upgrade pip setuptools wheel
+
+2. Install PyStemmer 
+
+$ pip install PyStemmer
+
+3. Install nltk (natural language toolkit)
+
+$ pip install nltk
+
+4. Install nltk.punkt, nltk.stopwords
+
+
+$ python 
+>> import nltk 
+>> nltk.download('punkt')
+>> nltk.download('stopwords')
