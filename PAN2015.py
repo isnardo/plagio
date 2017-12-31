@@ -1038,32 +1038,38 @@ class save_results():
         self.table_title = table_title
         self.file_name = file_name
         self.msg = """
-                <html lang="ES-mx">
-                <head>
-                  <meta charset="utf-8">
-                  <link rel="stylesheet" type="text/css" href="config/table.css">
-                </head>
-                <body></br>
-                """
-        self.divf = '</div>'
-        self.cell = '<div class="cell">'
-        self.wrapper = '<div class="wrapper">'
-        self.table = '<div class="table">'
-        self.rowh = '<div class="row header blue">'
-        self.row = '<div class="row">'
+<html lang="ES-mx">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="config/table.css">
+</head>
+<body>
+</br>
+
+"""
+        self.divf = '\n </div>\n'
+        self.rowh = '<div class="row header blue"> \n'
+        self.row =  '  <div class="row"> \n'
+        self.cell = '    <div class="cell"> \n'
+        self.wrapper = '<div class="wrapper"> \n'
+        self.table = '<div class="table"> \n'
+
+
         self.data = ''
 
     def save(self):
         self.make_title()
         self.make_table_header()
         self.msg = self.msg + self.data
+        self.msg = self.msg + self.divf + self.divf
+        self.msg = self.msg + '</body>\n</html>'
         html = open(self.file_name,'w')
         html.write(self.msg)
         html.close()
 
     def make_title(self):
         self.msg = self.msg + '<h1 style="text-align:center;color:#6fb0db;">'
-        self.msg = self.msg + self.table_title + '</h1>'
+        self.msg = self.msg + self.table_title + '</h1>\n'
 
     def make_table_header(self):
         self.msg = self.msg + self.wrapper
@@ -1100,8 +1106,8 @@ if __name__ == "__main__":
     The file of pairs is a plain text file where each line represent a pair of
     documents <supicious-document-name.txt> <source-document-name.txt>: suspicious-document00001.txt source-document00294.txt
     """
-    if len(sys.argv) >= 1:
         html = save_results('RESULTADOS','Resultados.html')
+        if len(sys.argv) >= 1:
 
         t1 = time.time()
         susp = sys.argv[1]
