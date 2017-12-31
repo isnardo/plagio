@@ -21,7 +21,7 @@ import xml.etree.ElementTree as ET
 
 def sum_vect(dic1, dic2):
     """
-    DESCRIPTION: Adding two vectors in form of dictionaries (sparse vectors or inverted list)  
+    DESCRIPTION: Adding two vectors in form of dictionaries (sparse vectors or inverted list)
     INPUTS: dic1 <dictionary> - Vector 1
             dic2 <dictionary> - Vector 2
     OUTPUT: res <dictionary> - Sum of the two vectors
@@ -41,7 +41,7 @@ def ss_treat(list_dic, offsets, min_sentlen, rssent, voc):
             offsets <2-tuple> - First value contains the offset character and the next contain the length in characters
             min_sentlen <integer> - Minimum of words allowed in a sentence
             rssent <integer> - Action to perform (0): Annex small sentences, (1) Remove small sentences
-            voc <dictionary> - The keys are the types (vocabulary) in a document while the values are the sentence frequency    
+            voc <dictionary> - The keys are the types (vocabulary) in a document while the values are the sentence frequency
     OUTPUT: No returned value. Modify the inputs list_dic, offsets and voc
     """
     if rssent == 0: #Annexing small sentences
@@ -72,7 +72,7 @@ def ss_treat(list_dic, offsets, min_sentlen, rssent, voc):
 
 def tf_idf(list_dic1, voc1, list_dic2, voc2):
     """
-    DESCRIPTION: Compute the tf-idf <tf x log(N/df)>  from a list of sentences with tf and the vocabularies in suspicios and source document   
+    DESCRIPTION: Compute the tf-idf <tf x log(N/df)>  from a list of sentences with tf and the vocabularies in suspicios and source document
     INPUT: list_dic1 <list of dictionaries> -  List containing the vectors (dictionaries) of document 1
            voc1 <dictionary> - Vocabulary at document 1 with the idf of each one
            list_dic2 <list of dictionaries> -  List containing the vectors (dictionaries) of document 2
@@ -83,14 +83,14 @@ def tf_idf(list_dic1, voc1, list_dic2, voc2):
     td = len(list_dic1) + len(list_dic2)
     for i in range(len(list_dic1)):
         for j in list_dic1[i].keys():
-            list_dic1[i][j] *= math.log(td / float(df[j]))        
+            list_dic1[i][j] *= math.log(td / float(df[j]))
     for i in range(len(list_dic2)):
         for j in list_dic2[i].keys():
             list_dic2[i][j] *= math.log(td / float(df[j]))
 
 def tf_idf_hard(list_dic1, voc1, list_dic2, voc2):
     """
-    DESCRIPTION: Compute the tf-idf <tf x [log(N/df)]^2>  from a list of sentences with tf and the vocabularies in suspicios and source document  
+    DESCRIPTION: Compute the tf-idf <tf x [log(N/df)]^2>  from a list of sentences with tf and the vocabularies in suspicios and source document
     INPUT: list_dic1 <list of dictionaries> -  List containing the vectors (dictionaries) of document 1
            voc1 <dictionary> - Vocabulary at document 1 with the idf of each one
            list_dic2 <list of dictionaries> -  List containing the vectors (dictionaries) of document 2
@@ -108,7 +108,7 @@ def tf_idf_hard(list_dic1, voc1, list_dic2, voc2):
 
 def tf_idf_soft(list_dic1, voc1, list_dic2, voc2):
     """
-    DESCRIPTION: Compute the tf-idf <tf x [log(N/df)]^0.5>  from a list of sentences with tf and the vocabularies in suspicios and source document  
+    DESCRIPTION: Compute the tf-idf <tf x [log(N/df)]^0.5>  from a list of sentences with tf and the vocabularies in suspicios and source document
     INPUT: list_dic1 <list of dictionaries> -  List containing the vectors (dictionaries) of document 1
            voc1 <dictionary> - Vocabulary at document 1 with the idf of each one
            list_dic2 <list of dictionaries> -  List containing the vectors (dictionaries) of document 2
@@ -123,10 +123,10 @@ def tf_idf_soft(list_dic1, voc1, list_dic2, voc2):
     for i in range(len(list_dic2)):
         for j in list_dic2[i].keys():
             list_dic2[i][j] *= math.pow(math.log(td / float(df[j])), 0.5)
-     
+
 def tf_idf_ind(list_dic1, voc1, list_dic2, voc2):
     """
-    DESCRIPTION: Compute the tf-idf <tf x log(N/df)>  from a list of sentences with tf and the vocabulary of each document separately   
+    DESCRIPTION: Compute the tf-idf <tf x log(N/df)>  from a list of sentences with tf and the vocabulary of each document separately
     INPUT: list_dic1 <list of dictionaries> -  List containing the vectors (dictionaries) of document 1
            voc1 <dictionary> - Vocabulary at document 1 with the idf of each one
            list_dic2 <list of dictionaries> -  List containing the vectors (dictionaries) of document 2
@@ -145,10 +145,10 @@ def tf_idf_ind(list_dic1, voc1, list_dic2, voc2):
     for i in range(td2):
         for j in list_dic2[i].keys():
             list_dic2[i][j] *= math.log(td2 / float(voc2[j]))
-            
+
 def eucl_norm(d1):
     """
-    DESCRIPTION: Compute the Euclidean norm of a sparse vector  
+    DESCRIPTION: Compute the Euclidean norm of a sparse vector
     INPUT: d1 <dictionary> - sparse vector representation
     OUTPUT: Norm of the sparse vector d1
     """
@@ -167,7 +167,7 @@ def cosine_measure(d1, d2):
     dot_prod = 0.0
     det = eucl_norm(d1) * eucl_norm(d2)
     if det == 0:
-        return 0 
+        return 0
     for word in d1.keys():
         if d2.has_key(word):
             dot_prod += d1[word] * d2[word]
@@ -175,7 +175,7 @@ def cosine_measure(d1, d2):
 
 def dice_coeff(d1, d2):
     """
-    DESCRIPTION: Compute the dice coefficient in sparse (dictionary) representation  
+    DESCRIPTION: Compute the dice coefficient in sparse (dictionary) representation
     INPUT: d1 <dictionary> - Sparse vector 1
            d2 <dictionary> - Sparse vector 2
     OUTPUT: Dice coefficient
@@ -206,7 +206,7 @@ def adjacent_chars(a, b, offsets, th):
     DESCRIPTION: Define if two sentences are adjacent measured in characters
     INPUT: a <int> - Sentence a index,
            b <int> - Sentence b index
-           offsets <list of tuples (int, int)> - Contain the char offset and length of each sentence 
+           offsets <list of tuples (int, int)> - Contain the char offset and length of each sentence
            th <int> - maximum gap between indexes
     OUTPUT: True if the two sentences are adjacents, False otherwise
     """
@@ -223,7 +223,7 @@ def adjacent_chars(a, b, offsets, th):
 
 def frag_founder(ps, src_offsets, susp_offsets, src_gap, susp_gap, src_size, susp_size, side):
     """
-    DESCRIPTION: Form clusters by grouping "adjacent" sentences in a given side (source o suspicious) 
+    DESCRIPTION: Form clusters by grouping "adjacent" sentences in a given side (source o suspicious)
     INPUT: ps <list of tuples (int, int)> - Seeds
            src_offsets <list of tuples (int, int)> - Contain the char offset and length of each source document sentence
            susp_offsets <list of tuples (int, int)> - Contain the char offset and length of each suspicious document sentence
@@ -231,8 +231,8 @@ def frag_founder(ps, src_offsets, susp_offsets, src_gap, susp_gap, src_size, sus
            susp_gap <int> - Max gap between sentences to be consider adjacent in the suspicious document
            src_size <int> - Minimum amount of sentences in a plagiarism case in the side of source document
            susp_size <int> - Minimum amount of sentences in a plagiarism case in the side of suspicious document
-           side <0 or 1> 0: Suspicious document side, 1: Source document side   
-    OUTPUT: res <list of list of tuples (int, int)> - Contains the clusters 
+           side <0 or 1> 0: Suspicious document side, 1: Source document side
+    OUTPUT: res <list of list of tuples (int, int)> - Contains the clusters
     """
     if side == 0:
         max_gap = susp_gap
@@ -262,7 +262,7 @@ def frag_founder(ps, src_offsets, susp_offsets, src_gap, susp_gap, src_size, sus
 
 def clustering(ps, src_offsets, susp_offsets, src_gap, susp_gap, src_size, susp_size, side, times):
     """
-    DESCRIPTION: Generates the clusters of seeds  
+    DESCRIPTION: Generates the clusters of seeds
     INPUT: ps <list of tuples (int, int)> - Seeds
            src_offsets <list of tuples (int, int)> - Contain the char offset and length of each source document sentence
            susp_offsets <list of tuples (int, int)> - Contain the char offset and length of each suspicious document sentence
@@ -271,7 +271,7 @@ def clustering(ps, src_offsets, susp_offsets, src_gap, susp_gap, src_size, susp_
            src_size <int> - Minimum amount of sentences in a plagiarism case in the side of source document
            susp_size <int> - Minimum amount of sentences in a plagiarism case in the side of suspicious document
            side <0 or 1> 0: Suspicious document side, 1: Source document side
-           times <int> - Counts how many times clustering() have been called   
+           times <int> - Counts how many times clustering() have been called
     OUTPUT: res <list of list of tuples (int, int)> - Contains the clusters
     """
     ps_sets = frag_founder(ps, src_offsets, susp_offsets, src_gap, susp_gap, src_size, susp_size, side)
@@ -284,10 +284,10 @@ def clustering(ps, src_offsets, susp_offsets, src_gap, susp_gap, src_size, susp_
             partial_res = clustering(i, src_offsets, susp_offsets, src_gap, susp_gap, src_size, susp_size, (side + 1) % 2, times)
             res.extend(partial_res)
     return res
-    
+
 def validation(plags, psr, src_offsets, susp_offsets, src_bow, susp_bow, src_gap, src_gap_least, susp_gap, susp_gap_least, src_size, susp_size, th3):
     """
-    DESCRIPTION: Compute the similarity of the resulting plagiarism cases from extension. In case of being below certain threshold extension is applied again with max_gap - 1 
+    DESCRIPTION: Compute the similarity of the resulting plagiarism cases from extension. In case of being below certain threshold extension is applied again with max_gap - 1
     INPUT: plags <list of list of two tuples [(int, int), (int, int)]> - Have the plagiarism cases represented by min and max sentence index in suspicious and source document respectively
            psr <list of list of tuples (int, int)> - Contains the clusters
            src_offsets <list of tuples (int, int)> - Contain the char offset and length of each source document sentence
@@ -295,16 +295,16 @@ def validation(plags, psr, src_offsets, susp_offsets, src_bow, susp_bow, src_gap
            src_bow <list of dictionaries> - Bag of words representing each sentence vector of source document
            susp_bow <list of dictionaries> - Bag of words representing each sentence vector of suspicious document
            src_gap <int> - Max gap between sentences to be consider adjacent in the source document
-           src_gap_least <int> - Smallest value the max gap between sentences considerd adjacent can gets in the source document 
+           src_gap_least <int> - Smallest value the max gap between sentences considerd adjacent can gets in the source document
            susp_gap <int> - Max gap between sentences to be consider adjacent in the suspicious document
            susp_gap_least <int> - Smallest value the max gap between sentences considerd adjacent can gets in the suspicious document
            src_size <int> - Minimum amount of sentences in a plagiarism case in the side of source document
            susp_size <int> - Minimum amount of sentences in a plagiarism case in the side of suspicious document
-           th3 <float> - Threshold for the minimum cosine similarity between source and suspicios fragments in a plagiarism case  
+           th3 <float> - Threshold for the minimum cosine similarity between source and suspicios fragments in a plagiarism case
     OUTPUT: res_plags <list of list of two tuples [(int, int), (int, int)]> - Contains the plagiarism cases that passed the validation process
             res_psr <list of list of tuples (int, int)> - Contains the clusters that passed the validation process
             res_sim_frag <list of floats> - Stores the cosine similarity between source and suspicios fragments in the plagiarism cases
-    """  
+    """
     res_plags = []
     res_psr = []
     res_sim_frag = []
@@ -318,7 +318,7 @@ def validation(plags, psr, src_offsets, susp_offsets, src_bow, susp_bow, src_gap
         for j in range(plags[i][1][0], plags[i][1][1] + 1):
             src_d = sum_vect(src_d, src_bow[j])
         #if dice_coeff(src_d, susp_d) <= th3:# or cosine_measure(src_d, susp_d) <= 0.40:
-        sim_frag = cosine_measure(src_d, susp_d) 
+        sim_frag = cosine_measure(src_d, susp_d)
         if sim_frag <= th3:
             #print 'Did not passed with gap', src_gap, '!'
             if src_gap > src_gap_least and susp_gap > susp_gap_least:#Do until substraction +1
@@ -350,7 +350,7 @@ def validation(plags, psr, src_offsets, susp_offsets, src_bow, susp_bow, src_gap
 
 def remove_overlap3(plags, psr, src_bow, susp_bow):
     """
-    DESCRIPTION: From a set of overlapping plagiarism cases, looking only on the suspicious side, selects the best case. See article (1) at the beggining of this file, for the formal description.  
+    DESCRIPTION: From a set of overlapping plagiarism cases, looking only on the suspicious side, selects the best case. See article (1) at the beggining of this file, for the formal description.
     INPUT: plags <list of list of two tuples [(int, int), (int, int)]> - Have the plagiarism cases represented by min and max sentence index in suspicious and source document respectively
            psr <list of list of tuples (int, int)> - Contains the clusters
            src_bow <list of dictionaries> - Bag of words representing each sentence vector of source document
@@ -460,7 +460,7 @@ def remove_overlap3(plags, psr, src_bow, susp_bow):
 
 def remove_small_plags(plags, psr, src_offsets, susp_offsets, th):
     """
-    DESCRIPTION: Remove the plagiarism cases that have less tha th characters either in the source or suspicios fragments  
+    DESCRIPTION: Remove the plagiarism cases that have less tha th characters either in the source or suspicios fragments
     INPUT: plags <list of list of two tuples [(int, int), (int, int)]> - Have the plagiarism cases represented by min and max sentence index in suspicious and source document respectively
            psr <list of list of tuples (int, int)> - Contains the clusters
            src_offsets <list of tuples (int, int)> - Contain the char offset and length of each source document sentence
@@ -473,17 +473,17 @@ def remove_small_plags(plags, psr, src_offsets, susp_offsets, th):
     for i in range(len(plags)):
         arg1 = (susp_offsets[plags[i][0][0]][0], susp_offsets[plags[i][0][1]][0] + susp_offsets[plags[i][0][1]][1])
         arg2 = (src_offsets[plags[i][1][0]][0], src_offsets[plags[i][1][1]][0] + src_offsets[plags[i][1][1]][1])
-        if arg1[1] - arg1[0] >= th and arg2[1] - arg2[0] >= th: 
+        if arg1[1] - arg1[0] >= th and arg2[1] - arg2[0] >= th:
             res_plags.append(plags[i])
             res_psr.append(psr[i])
     return res_plags, res_psr
 
 def word_span_tokenizer(text):
     """
-    DESCRIPTION: Tokenize a text in words  
+    DESCRIPTION: Tokenize a text in words
     INPUT: text <string> - Text to be tokenized
     OUTPUT: words <list> - List of words from text
-            offsets <list of tuple (int, int)> - Initial and final position of each word 
+            offsets <list of tuple (int, int)> - Initial and final position of each word
     """
     words = []
     offsets = []
@@ -503,7 +503,7 @@ def word_span_tokenizer(text):
                     break
         idx = 0
         for word in sent_words:
-            words.append(word) 
+            words.append(word)
             pos = sent[idx:].find(word)
             #print pos
             offsets.append([span[0] + idx + pos, idx + span[0] + pos + len(word)]) #(Initial position, Final position)
@@ -516,13 +516,13 @@ def word_span_tokenizer(text):
 
 def longest_common_substring_all(s1, s1_off, s2, s2_off, th):#Using Dynamic programming #Necesito encontrar todos los elementos mayor a un umbral en lugar de solo el mayor
     """
-    DESCRIPTION: Find the common subtrings using dynamic programming  
+    DESCRIPTION: Find the common subtrings using dynamic programming
     INPUT: s1 <list> - List of words from text 1
            s1_off <list of tuple (int, int)> - List of offsets of text1
            s2 <list> - List of words from text 2
            s2_off <list of tuple (int, int)> - List of offsets of text2
            th <int> - Threshold in characters of shortest common substring allowed
-    OUTPUT: res <list tuples (int, int, int, int)> - Common subtring correspondence in text1 and text2 represented as char offsets (t1_init, t1_end, t2_init, t2_end)  
+    OUTPUT: res <list tuples (int, int, int, int)> - Common subtring correspondence in text1 and text2 represented as char offsets (t1_init, t1_end, t2_init, t2_end)
     """
     m = [[0] * (1 + len(s2)) for i in xrange(1 + len(s1))]
     res = []
@@ -537,7 +537,7 @@ def longest_common_substring_all(s1, s1_off, s2, s2_off, th):#Using Dynamic prog
                     y_longest = y
             else:
                 m[x][y] = 0
-                if m[x - 1][y - 1] != 0: 
+                if m[x - 1][y - 1] != 0:
                     len_plag = s1_off[x - 2][1] - s1_off[x - 1 - m[x - 1][y - 1]][0]
                     if len_plag > th:
                         res.append((s1_off[x - 1 - m[x - 1][y - 1]][0], s1_off[x - 2][1], s2_off[y - 1 - m[x - 1][y - 1]][0], s2_off[y - 2][1]))
@@ -555,7 +555,7 @@ def longest_common_substring_all(s1, s1_off, s2, s2_off, th):#Using Dynamic prog
 
 def common_substring_pro_all(str1, str2, th_acc):
     """
-    DESCRIPTION: Find the common substrings longer than some threshold  
+    DESCRIPTION: Find the common substrings longer than some threshold
     INPUT: str1 <list> - Text 1
            str2 <list> - Text 2
            th_acc <int> - Threshold in characters of shortest common substring allowed
@@ -568,7 +568,7 @@ def common_substring_pro_all(str1, str2, th_acc):
 
 def verbatim_det_lcs_all(plags, psr, susp_text, src_text, susp_offsets, src_offsets, th_shortest):
     """
-    DESCRIPTION: Uses longest common substring algorithm to classify a pair of documents being compared as verbatim plagarism candidate (the pair of documents), and removing the none verbatim cases if positive  
+    DESCRIPTION: Uses longest common substring algorithm to classify a pair of documents being compared as verbatim plagarism candidate (the pair of documents), and removing the none verbatim cases if positive
     INPUT: plags <list of list of two tuples [(int, int), (int, int)]> - Have the plagiarism cases represented by min and max sentence index in suspicious and source document respectively
            psr <list of list of tuples (int, int)> - Contains the clusters
            susp_text <string> - Suspicios document text
@@ -578,7 +578,7 @@ def verbatim_det_lcs_all(plags, psr, susp_text, src_text, susp_offsets, src_offs
            th_shortest <int> - Threshold in characters of shortest common substring allowed
     OUTPUT: res_plags <list of list of two tuples [(int, int), (int, int)]> - Contains the plagiarism cases as common substrings or the same as the arguments depending on type_plag
             res_psr <list of list of tuples (int, int)> - Contains the clusters with seeds present in the common substrings, or the same as the arguments depending on type_plag
-            type_plag <0 or 1> - 1: verbatim plagiarism case    0: Other plagiarism case 
+            type_plag <0 or 1> - 1: verbatim plagiarism case    0: Other plagiarism case
             res_long_frag <list> - Contains the lengths of common substrings
     """
     #plags   [[(susp_ini, susp_end), (src_ini, src_end)], ...]
@@ -603,8 +603,8 @@ def verbatim_det_lcs_all(plags, psr, susp_text, src_text, susp_offsets, src_offs
                     flag = 1
                     break
             if flag == 0:
-                res.append(tup_i)  
-         
+                res.append(tup_i)
+
         #print 'Res2', res2
         #print 'Res', res
         #max_len = max([res[1] - res[0], res[3] - res[2]])
@@ -668,7 +668,7 @@ def char_preprocess(texto, chars_inserted = []):
         #if val ==  0: #Null character
         #    text[i] = ' '
         if val == 160:
-            if i - 1 >= 0 and ord(text[i - 1]) in spaces: 
+            if i - 1 >= 0 and ord(text[i - 1]) in spaces:
                 text[i - 1] = '.'
                 text[i] = ' '
             elif i + 1 <= len_text and ord(text[i + 1]) in spaces:
@@ -693,12 +693,12 @@ def char_preprocess(texto, chars_inserted = []):
                 else:
                     nl_flag = 0
             last_ch = ord(text[i])
-            last_ch_pos = i   
+            last_ch_pos = i
     return ''.join(text)
 
 def update_offsets(offsets, chr_in):
     """
-    DESCRIPTION: Updates the offsets of sentences after tokenize() and char_preprocess() 
+    DESCRIPTION: Updates the offsets of sentences after tokenize() and char_preprocess()
     INPUT: offsets <list of tuple (int, int)> - Offsets affected by char_preprocess()
            chars_in <list> - Positions of the chars inserted in the text
     OUTPUT: Returns the corresponding orginal offsets
@@ -717,17 +717,17 @@ def update_offsets(offsets, chr_in):
 
 def tokenize(text, voc = {}, offsets = [], sents = [], rem_sw = 0):
     """
-    DESCRIPTION: Tokenization and vectorization of sentences in a document  
+    DESCRIPTION: Tokenization and vectorization of sentences in a document
     INPUTS: text <string> - Text to be pre-processed
             voc <dictionary> - The keys are the types (vocabulary) in a document while the values are the sentence frequency
             offsets <2-tuple> - First value contains the offset character and the next contain the length in characters
             sents <list> - Sentences of the text without tokenization
             rem_sw <integer> - Option about treatment of stopwords (0): None stopword remove, (1): 50 more common stopwords removed, (other): All stopwords removed
     OUTPUT: sent_vects <list of dictionaries> - List of dictionaries representing each sentence vector. Sparce bag of words. Also modify sents, offsets and voc.
-    NOTE: If char_preprocess() is used, you must use update_offsets() also  
-    """ 
+    NOTE: If char_preprocess() is used, you must use update_offsets() also
+    """
     text = text.replace(chr(0), ' ')
-    #chr_in = [] 
+    #chr_in = []
     #text = char_preprocess(text, chr_in)
     sent_detector = nltk.data.load('tokenizers/punkt/spanish.pickle')
     #sent_detector = nltk.data.load('tokenizers/punkt/english.pickle')
@@ -794,7 +794,7 @@ class SGSPLAG:
         self.summary = parameters['summary']
         self.src_gap_summary = parameters['src_gap_summary']
         self.susp_gap_summary = parameters['src_gap_summary']
-        
+
         self.susp_text = susp_text
         self.src_text = src_text
         self.src_voc = {}
@@ -807,7 +807,7 @@ class SGSPLAG:
 
     def process(self):
         """
-        DESCRIPTION: Process the plagiarism pipeline  
+        DESCRIPTION: Process the plagiarism pipeline
         INPUT: self <SGSPLAG object>
         OUTPUT: type_plag <int> - Verbatim plagarism flag
                 summary_flag <int> - Summary plagarism flag
@@ -815,15 +815,15 @@ class SGSPLAG:
         self.preprocess()
         self.detections, type_plag, summary_flag = self.compare()
         return type_plag, summary_flag
-    
+
     def preprocess(self):
         """
-        DESCRIPTION: Preprocess the suspicious and source document  
+        DESCRIPTION: Preprocess the suspicious and source document
         INPUT: self <SGSPLAG object>
         OUTPUT: None. Gets bag of words with tf-idf, offsets and preprocess sentences
         """
         self.src_bow = tokenize(self.src_text, self.src_voc, self.src_offsets, self.src_sents, self.rem_sw)
-        ss_treat(self.src_bow, self.src_offsets, self.min_sentlen, self.rssent, self.src_voc)    
+        ss_treat(self.src_bow, self.src_offsets, self.min_sentlen, self.rssent, self.src_voc)
         self.susp_bow = tokenize(self.susp_text, self.susp_voc, self.susp_offsets, self.susp_sents, self.rem_sw)
         ss_treat(self.susp_bow, self.susp_offsets, self.min_sentlen, self.rssent, self.susp_voc)
         #=======================================================================
@@ -832,15 +832,15 @@ class SGSPLAG:
         # self.susp_bow_soft = copy.deepcopy(self.susp_bow)
         # self.susp_bow_hard = copy.deepcopy(self.susp_bow)
         #=======================================================================
-        
+
         if self.tf_idf_p == 1:
             #tf_idf_soft(self.src_bow_soft, self.src_voc, self.susp_bow_soft, self.susp_voc)
             #tf_idf_hard(self.src_bow_hard, self.src_voc, self.susp_bow_hard, self.susp_voc)
             tf_idf(self.src_bow, self.src_voc, self.susp_bow, self.susp_voc)
-    
+
     def seeding(self):
         """
-        DESCRIPTION: Creates the seeds from pair of sentece similarity using dice and cosine similarity   
+        DESCRIPTION: Creates the seeds from pair of sentece similarity using dice and cosine similarity
         INPUT: self <SGSPLAG object>
         OUTPUT: ps <list of tuple (int, int, float, float)> - Seeds
         """
@@ -852,10 +852,10 @@ class SGSPLAG:
                 if v1 > self.th1 and v2 > self.th2:
                     ps.append((c, r, v1, v2))
         return ps
-    
+
     def extension(self, ps):
         """
-        DESCRIPTION: Adding two vectors  
+        DESCRIPTION: Adding two vectors
         INPUT: self <SGSPLAG object>
                ps <list of tuple (int, int, float, float)> - Seeds
         OUTPUT: plags <list of list of two tuples [(int, int), (int, int)]> - Contains the plagiarism cases after validation
@@ -872,17 +872,17 @@ class SGSPLAG:
         else:
             plags, psr, sim_frag = temp_res[0], temp_res[1], temp_res[2]
         return plags, psr, sim_frag
-    
+
     def filtering(self, plags, psr):
         """
-        DESCRIPTION: Filter the plagiarism cases by removing overlapping and short cases  
+        DESCRIPTION: Filter the plagiarism cases by removing overlapping and short cases
         INPUT: plags <list of list of two tuples [(int, int), (int, int)]> - Contains the plagiarism cases after validation
                psr <list of list of tuples (int, int)> - Contains the clusters after validation
         OUTPUT: plags <list of list of two tuples [(int, int), (int, int)]> - Contains the plagiarism cases. Also modify psr.
         """
         plags, psr = remove_overlap3(plags, psr, self.src_bow, self.susp_bow)
         plags, psr = remove_small_plags(plags, psr, self.src_offsets, self.susp_offsets, self.min_plaglen)
-        
+
         #=======================================================================
         # plags, psr, type_plag = verbatim_det(plags, psr, self.susp_offsets,self.src_offsets, 0.9, 0.7)
         # if type_plag == 1:
@@ -891,17 +891,17 @@ class SGSPLAG:
         #     self.src_gap = 0
         #     self.src_gap_least = 0
         #     self.susp_gap = 0
-        #     self.susp_gap_least = 0 
+        #     self.susp_gap_least = 0
         #     for ps_tmp in psr:
         #         plags_tmp, psr_tmp = self.extension(ps_tmp)
         #         plags.extend(plags_tmp)
         #         psr2.extend(psr_tmp)
         #=======================================================================
         return plags
-    
+
     def compare(self):
         """
-        DESCRIPTION: Test a suspicious document for near-duplicate plagiarism with regards to a source document and return a feature list depending on the type_plag and summary_flag flags.  
+        DESCRIPTION: Test a suspicious document for near-duplicate plagiarism with regards to a source document and return a feature list depending on the type_plag and summary_flag flags.
         INPUT: self <SGSPLAG object>
         OUTPUT: detections <list> - Representation of plagairism cases before writing the xml file with require PAN format
                 type_plag <int> - Verbatim flag
@@ -915,14 +915,14 @@ class SGSPLAG:
             plags_verbatim, psr_verbatim, type_plag, long_frag = verbatim_det_lcs_all(plags, psr, self.susp_text, self.src_text, self.susp_offsets,self.src_offsets, self.verbatim_minlen)
         else:
             type_plag = 0
-        
+
         #REMOVE WHEN USING META-CLASSIFIER
-        
+
         #=======================================================================
         # if type_plag == 0:
-        #     for plag in plags: 
+        #     for plag in plags:
         #         arg1 = (self.susp_offsets[plag[0][0]][0], self.susp_offsets[plag[0][1]][0] + self.susp_offsets[plag[0][1]][1])
-        #         arg2 = (self.src_offsets[plag[1][0]][0], self.src_offsets[plag[1][1]][0] + self.src_offsets[plag[1][1]][1]) 
+        #         arg2 = (self.src_offsets[plag[1][0]][0], self.src_offsets[plag[1][1]][0] + self.src_offsets[plag[1][1]][1])
         #         detections.append([arg1, arg2])
         # else:
         #     for plag in plags_verbatim:
@@ -930,23 +930,23 @@ class SGSPLAG:
         #         arg2 = plag[1][0], plag[1][1]
         #         detections.append([arg1, arg2])
         #=======================================================================
-        
-        
+
+
         ####META-CLASSIFIER####
         if self.summary != 0:
             self.src_gap = self.src_gap_summary
             self.susp_gap = self.susp_gap_summary
             plags2, psr2, sim_frag = self.extension(ps)
             plags2 = self.filtering(plags2, psr2)
-        summary_flag = 0  
+        summary_flag = 0
         if type_plag == 0:
             sum_src = 0
             sum_susp = 0
-            if self.summary != 0: 
+            if self.summary != 0:
                 for plag in plags2:
                     arg1 = (self.susp_offsets[plag[0][0]][0], self.susp_offsets[plag[0][1]][0] + self.susp_offsets[plag[0][1]][1])
                     arg2 = (self.src_offsets[plag[1][0]][0], self.src_offsets[plag[1][1]][0] + self.src_offsets[plag[1][1]][1])
-                    sum_susp = sum_susp + (arg1[1] - arg1[0]);   
+                    sum_susp = sum_susp + (arg1[1] - arg1[0]);
                     sum_src = sum_src + (arg2[1] - arg2[0]);
             if sum_src != 0 and sum_src >= 3 * sum_susp: #Summary heuristic
                 summary_flag = 1
@@ -965,10 +965,10 @@ class SGSPLAG:
                 arg2 = plag[1][0], plag[1][1]
                 detections.append([arg1, arg2])
         return detections, type_plag, summary_flag
-    
+
 def read_parameters(addr):
     """
-    DESCRIPTION: Read te parameter from an xml file in addr  
+    DESCRIPTION: Read te parameter from an xml file in addr
     INPUT: addr <string> - Path to the settings file
     OUTPUT: parameters <dictionary> - Contains the parameter name and value
     """
@@ -987,7 +987,7 @@ def read_parameters(addr):
 
 def modify_parameters(p, parameters, addr):
     """
-    DESCRIPTION: Modify the parameters that were explicitly change in the command line. Useful for multiple testing when optimizing parameters.  
+    DESCRIPTION: Modify the parameters that were explicitly change in the command line. Useful for multiple testing when optimizing parameters.
     INPUT: p <list> - List or command line parameters from sys.argv[5:]
            parameters <dictionary> - Dictionary of original parameters
            addr <string> - Path to xml sttings file
@@ -1023,7 +1023,7 @@ def modify_parameters(p, parameters, addr):
 
 def read_document(addr, encoding = 'utf-8'):
     """
-    DESCRIPTION: Read a document with given encoding  
+    DESCRIPTION: Read a document with given encoding
     INPUT: addr <string> - Path to file
            encoding <string> - encoding
     OUTPUT: text <string> - File content
@@ -1033,24 +1033,42 @@ def read_document(addr, encoding = 'utf-8'):
     fid.close()
     return text
 
-def serialize_features(susp, src, features, outdir):
+def serialize_features(susp, src, features, msg):
     """
-    DESCRIPTION: Serialize a feature list into a xml file. The xml is structured as described in http://www.webis.de/research/corpora/pan-pc-12/pan12/readme.txt. The filename will follow the naming scheme {susp}-{src}.xml and is located in the current directory.  Existing files will be overwritten.  
+    DESCRIPTION: Serialize a feature list into a xml file. The xml is structured as described in http://www.webis.de/research/corpora/pan-pc-12/pan12/readme.txt. The filename will follow the naming scheme {susp}-{src}.xml and is located in the current directory.  Existing files will be overwritten.
     INPUT: susp <string> - Filename of the suspicious document
            src <string> - Filename of the source document
            features <list of 2-tuples> - List containing feature-tuples of the form ((start_pos_susp, end_pos_susp), (start_pos_src, end_pos_src))
            outdir <string> - Contains the output directory of the xml file
     OUTPUT: None
     """
+
+    cell = '<div class="cell">'
+    row = '<div class="row">'
+    divf = '</div>'
+    for f in features:
+        msg = msg + row + cell + src + divf
+        msg = msg + cell + str(f[1][1] - f[1][0]) + divf
+        msg = msg + cell + str(f[1][0]) + divf
+        msg = msg + cell + str(f[0][1] - f[0][0]) + divf
+        msg = msg + cell + str(f[0][0]) + divf + divf
+
+
+    return msg
+
+
+'''
     impl = xml.dom.minidom.getDOMImplementation()
     doc = impl.createDocument(None, 'document', None)
     root = doc.documentElement
     root.setAttribute('documento-analizado', susp)
     doc.createElement('feature')
+
     for f in features:
+
         feature = doc.createElement('feature')
         #feature.setAttribute('name', 'detected-plagiarism')
-	feature.setAttribute('tarea', susp)
+        feature.setAttribute('tarea', susp)
         feature.setAttribute('tarea_offset', str(f[0][0]))
         feature.setAttribute('tarea_length', str(f[0][1] - f[0][0]))
         feature.setAttribute('doc_BD', src)
@@ -1058,6 +1076,7 @@ def serialize_features(susp, src, features, outdir):
         feature.setAttribute('doc_BD_length', str(f[1][1] - f[1][0]))
         root.appendChild(feature)
     doc.writexml(open(outdir + susp.split('.')[0] + '-' + src.split('.')[0] + '.xml', 'w'), encoding = 'utf-8', newl = '\n')
+'''
 
 '''
 MAIN
@@ -1065,12 +1084,33 @@ MAIN
 if __name__ == "__main__":
     """ Process the command line arguments. We expect four arguments: The path
     pointing to the pairs file and the paths pointing to the directories where
-    the actual source and suspicious documents are located, and the directory 
+    the actual source and suspicious documents are located, and the directory
     where the output will be saved.
     The file of pairs is a plain text file where each line represent a pair of
     documents <supicious-document-name.txt> <source-document-name.txt>: suspicious-document00001.txt source-document00294.txt
-    """   
+    """
     if len(sys.argv) >= 5:
+        html = open('Resultados.html','w')
+
+        msg = """<html lang="ES-mx">
+        <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="table.css">
+        </head>
+        <body>
+        </br>
+        <h1 style="text-align:center;color:#6fb0db;"> RESULTADOS </h1>
+        <div class="wrapper">
+        <div class="table">
+          <div class="row header blue">
+            <div class="cell"> Documento comparado </div>
+            <div class="cell"> Caracteres </div>
+            <div class="cell"> Offset </div>
+            <div class="cell"> Tarea Caracteres </div>
+            <div class="cell"> Tarea Offset </div>
+          </div>
+        """
+
         t1 = time.time()
         srcdir = sys.argv[2]
         suspdir = sys.argv[3]
@@ -1087,8 +1127,13 @@ if __name__ == "__main__":
             susp, src = line.split()
             sgsplag_obj = SGSPLAG(read_document(os.path.join(suspdir, susp)), read_document(os.path.join(srcdir, src)), parameters)
             type_plag, summary_flag = sgsplag_obj.process()
-            serialize_features(susp, src, sgsplag_obj.detections, outdir)
+            msg = serialize_features(susp, src, sgsplag_obj.detections, msg)
         t2 = time.time()
+
+        msg = msg + '</div></body></html>'
+        html.write(msg)
+        html.close()
+
         print t2 - t1
     else:
         print('\n'.join(["Unexpected number of commandline arguments.", "Usage: ./pan13-plagiarism-text-alignment-example.py {pairs} {src-dir} {susp-dir} {out-dir}"]))
