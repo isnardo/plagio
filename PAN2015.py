@@ -1033,50 +1033,61 @@ def read_document(addr, encoding = 'utf-8'):
     fid.close()
     return text
 
-def serialize_features(susp, src, features, msg):
-    """
-    DESCRIPTION: Serialize a feature list into a xml file. The xml is structured as described in http://www.webis.de/research/corpora/pan-pc-12/pan12/readme.txt. The filename will follow the naming scheme {susp}-{src}.xml and is located in the current directory.  Existing files will be overwritten.
-    INPUT: susp <string> - Filename of the suspicious document
-           src <string> - Filename of the source document
-           features <list of 2-tuples> - List containing feature-tuples of the form ((start_pos_susp, end_pos_susp), (start_pos_src, end_pos_src))
-           outdir <string> - Contains the output directory of the xml file
-    OUTPUT: None
-    """
+class save_results():
+    def __init__(self,table_title,file_name):
+        self.table_title = table_title
+        self.file_name = file_name
+        self.msg = """
+                <html lang="ES-mx">
+                <head>
+                  <meta charset="utf-8">
+                  <link rel="stylesheet" type="text/css" href="config/table.css">
+                </head>
+                <body></br>
+                """
+        self.divf = '</div>'
+        self.cell = '<div class="cell">'
+        self.wrapper = '<div class="wrapper">'
+        self.table = '<div class="table">'
+        self.rowh = '<div class="row header blue">'
+        self.row = '<div class="row">'
+        self.data = ''
 
-    cell = '<div class="cell">'
-    row = '<div class="row">'
-    divf = '</div>'
-    for f in features:
-        msg = msg + row + cell + src + divf
-        msg = msg + cell + str(f[1][1] - f[1][0]) + divf
-        msg = msg + cell + str(f[1][0]) + divf
-        msg = msg + cell + str(f[0][1] - f[0][0]) + divf
-        msg = msg + cell + str(f[0][0]) + divf + divf
+    def save(self):
+        self.make_title()
+        self.make_table_header()
+        self.msg = self.msg + self.data
+        html = open(self.file_name,'w')
+        html.write(self.msg)
+        html.close()
 
+    def make_title(self):
+        self.msg = self.msg + '<h1 style="text-align:center;color:#6fb0db;">'
+        self.msg = self.msg + self.table_title + '</h1>'
 
-    return msg
+    def make_table_header(self):
+        self.msg = self.msg + self.wrapper
+        self.msg = self.msg + self.table
+        self.msg = self.msg + self.rowh
+        self.msg = self.msg + self.cell + ' Documento comparado ' + self.divf
+        self.msg = self.msg + self.cell + ' Caracteres ' + self.divf
+        self.msg = self.msg + self.cell + ' Offset ' + self.divf
+        self.msg = self.msg + self.cell + ' Documento BD ' + self.divf
+        self.msg = self.msg + self.cell + ' Caracteres ' + self.divf
+        self.msg = self.msg + self.cell + ' Offset ' + self.divf
+        self.msg = self.msg + self.divf
 
+    def add_data(self,susp,doc,features):
+        for f in features:
+            self.data = self.data + self.row
+            self.data = self.data + self.cell + susp + self.divf
+            self.data = self.data + self.cell + str(f[0][1] - f[0][0]) + self.divf
+            self.data = self.data + self.cell + str(f[0][0]) + self.divf
+            self.data = self.data + self.cell + doc + self.divf
+            self.data = self.data + self.cell + str(f[1][1] - f[1][0]) + self.divf
+            self.data = self.data + self.cell + str(f[1][0]) + self.divf
+            self.data = self.data + self.divf
 
-'''
-    impl = xml.dom.minidom.getDOMImplementation()
-    doc = impl.createDocument(None, 'document', None)
-    root = doc.documentElement
-    root.setAttribute('documento-analizado', susp)
-    doc.createElement('feature')
-
-    for f in features:
-
-        feature = doc.createElement('feature')
-        #feature.setAttribute('name', 'detected-plagiarism')
-        feature.setAttribute('tarea', susp)
-        feature.setAttribute('tarea_offset', str(f[0][0]))
-        feature.setAttribute('tarea_length', str(f[0][1] - f[0][0]))
-        feature.setAttribute('doc_BD', src)
-        feature.setAttribute('doc_BD_offset', str(f[1][0]))
-        feature.setAttribute('doc_BD_length', str(f[1][1] - f[1][0]))
-        root.appendChild(feature)
-    doc.writexml(open(outdir + susp.split('.')[0] + '-' + src.split('.')[0] + '.xml', 'w'), encoding = 'utf-8', newl = '\n')
-'''
 
 '''
 MAIN
@@ -1089,50 +1100,31 @@ if __name__ == "__main__":
     The file of pairs is a plain text file where each line represent a pair of
     documents <supicious-document-name.txt> <source-document-name.txt>: suspicious-document00001.txt source-document00294.txt
     """
-    if len(sys.argv) >= 5:
-        html = open('Resultados.html','w')
-
-        msg = """<html lang="ES-mx">
-        <head>
-        <meta charset="utf-8">
-        <link rel="stylesheet" type="text/css" href="table.css">
-        </head>
-        <body>
-        </br>
-        <h1 style="text-align:center;color:#6fb0db;"> RESULTADOS </h1>
-        <div class="wrapper">
-        <div class="table">
-          <div class="row header blue">
-            <div class="cell"> Documento comparado </div>
-            <div class="cell"> Caracteres </div>
-            <div class="cell"> Offset </div>
-            <div class="cell"> Tarea Caracteres </div>
-            <div class="cell"> Tarea Offset </div>
-          </div>
-        """
+    if len(sys.argv) >= 1:
+        html = save_results('RESULTADOS','Resultados.html')
 
         t1 = time.time()
-        srcdir = sys.argv[2]
-        suspdir = sys.argv[3]
-        outdir = sys.argv[4]
-        if outdir[-1] != "/":
-            outdir += "/"
-        lines = open(sys.argv[1], 'r').readlines()
-        parameters = read_parameters('settings.xml')
+        susp = sys.argv[1]
+        #if outdir[-1] != "/":
+        #    outdir += "/"
+        lines = open('docs_comparar', 'r').readlines()
+        parameters = read_parameters('config/settings.xml')
         print parameters
-        out = modify_parameters(sys.argv[5:], parameters, 'settings.xml')
+        out = modify_parameters(sys.argv[5:], parameters, 'config/settings.xml')
         print parameters
         for line in lines:
             print line
-            susp, src = line.split()
-            sgsplag_obj = SGSPLAG(read_document(os.path.join(suspdir, susp)), read_document(os.path.join(srcdir, src)), parameters)
+            src = ''.join( line.split() )
+            susp_dir = 'documentos/' + susp
+            src_dir = 'bd-documentos/' + src
+            #sgsplag_obj = SGSPLAG(read_document(os.path.join('documentos', susp)), read_document(os.path.join('bd-documentos', src)), parameters)
+            sgsplag_obj = SGSPLAG(read_document(susp_dir), read_document(src_dir), parameters)
             type_plag, summary_flag = sgsplag_obj.process()
-            msg = serialize_features(susp, src, sgsplag_obj.detections, msg)
+            #msg = html_output(susp, src, sgsplag_obj.detections, msg)
+            html.add_data(susp, src, sgsplag_obj.detections)
         t2 = time.time()
 
-        msg = msg + '</div></body></html>'
-        html.write(msg)
-        html.close()
+        html.save()
 
         print t2 - t1
     else:
