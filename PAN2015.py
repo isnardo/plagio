@@ -1103,7 +1103,7 @@ class save_results():
         self.msg = self.msg + self.cell + ' Texto Plagiado ' + self.divf
         self.msg = self.msg + self.divf
 
-    def add_data(self, susp, susp_len, src, src_len, features):
+    def add_data(self, susp, susp_len, susp_text, src, src_len, src_text, features):
         each_file_name = 'resultados/' + susp + '-' + src + '.html'
 
         each_html = open(each_file_name,'w')
@@ -1117,8 +1117,10 @@ class save_results():
         """
         each_data = each_data + '<a href="../' + self.file_name + '"> << REGRESAR </a></br>'
 
-        disp_text_src = []
-        disp_text_susp = []
+        html_susp = '';
+        html_src = '';
+        count_susp = 0;
+        count_src = 0;
 
         for f in features:
             #Number of characters in susp and src documents
@@ -1127,6 +1129,23 @@ class save_results():
             #Percentage of plagiarism in susp and src documents
             perc_susp = car_susp * 100 / susp_len
             perc_src = car_src * 100 / src_len
+
+            #Generate text to show in comparison window
+            text_aux = susp_text[ count_susp:f[0][0] ]
+            html_susp = html_susp + ''.join( text_aux ).encode('utf-8')
+            text_aux = susp_text[ f[0][0]:f[0][1] ]
+            html_susp = html_susp + '<span style="background-color:yellow;">'
+            html_susp = html_susp + ''.join( text_aux ).encode('utf-8')
+            html_susp = html_susp + '</span>'
+            count_susp = f[0][1]
+
+            text_aux = src_text[ count_src:f[1][0] ]
+            html_src = html_src + ''.join( text_aux ).encode('utf-8')
+            text_aux = src_text[ f[1][0]:f[1][1] ]
+            html_src = html_src + '<span style="background-color:yellow;">'
+            html_src = html_src + ''.join( text_aux ).encode('utf-8')
+            html_src = html_src + '</span>'
+            count_src = f[1][1]
 
             self.data = self.data + self.row
             self.data = self.data + self.cell + susp + self.divf
@@ -1140,7 +1159,17 @@ class save_results():
             self.data = self.data + self.cell + '<a href="' + each_file_name + '">Ver >></a>' + self.divf
             self.data = self.data + self.divf
 
-            for x in range()
+        text_aux = src_text[ count_susp:susp_len ]
+        html_susp = html_susp + ''.join( text_aux ).encode('utf-8')
+
+        text_aux = src_text[ count_src:src_len ]
+        html_susp = html_src + ''.join( text_aux ).encode('utf-8')
+
+        each_data = self.wrapper + each_data + self.table + self.rowh
+        each_data = each_data + self.cell + ' Texto Comparado ' + self.divf
+        each_data = each_data + self.cell + ' Texto Base de Datos ' + self.divf + self.divf
+        each_data = each_data + self.row + self.cell + html_susp + self.divf
+        each_data = each_data + self.cell + html_src + self.divf + self.divf + self.divf
 
         each_html.write( each_data )
         each_html.close()
@@ -1190,7 +1219,7 @@ if __name__ == "__main__":
 
             type_plag, summary_flag = sgsplag_obj.process()
 
-            html.add_data(susp, susp_len, src, src_len, sgsplag_obj.detections)
+            html.add_data( susp,susp_len,susp_text,src,src_len,src_text,sgsplag_obj.detections )
 
         t2 = time.time()
         html.save()
