@@ -16,7 +16,7 @@
 	</parameter>
 	<parameter name="src_gap">
 		<type>int</type>
-		<value>4</value>
+		<value>3</value>
 		<description>Maximun gap between sentences in the source document taken as adjacents.</description>
 	</parameter>
 	<parameter name="src_gap_least">
@@ -26,7 +26,7 @@
 	</parameter>
 	<parameter name="susp_gap">
 		<type>int</type>
-		<value>4</value>
+		<value>3</value>
 		<description>Maximun gap between sentences in the suspicious document taken as adjacents.</description>
 	</parameter>
 	<parameter name="susp_gap_least">
@@ -56,7 +56,7 @@
 	</parameter>
 	<parameter name="min_plaglen">
 		<type>int</type>
-		<value>150</value>
+		<value>50</value>
 		<description>Minimum amount of chacarters allowed in each side of a plagiarism case.</description>
 	</parameter>
 	<parameter name="rssent">
@@ -71,7 +71,7 @@
 	</parameter>
 	<parameter name="rem_sw">
 		<type>int</type>
-		<value>3</value>
+		<value>0</value>
 		<description>Define the treatment of stopwords. 0: Do not remove stopwords   1: Remove 50 more common stopwords   Other:Remove all stopwords</description>
 	</parameter>
 	<parameter name="verbatim">

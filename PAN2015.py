@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
+__modified__ = 'Isnardo Reducindo'
+__email__ = 'isnardo.reducindo@uaslp.co.mx'
 __author__ = 'Miguel Angel Sanchez Perez'
-__email__ = 'masp1988 at hotmail dot com'
+__email__ = 'masp1988@hotmail.com'
 __version__ = '2.0'
 
 """(1) Miguel A. Sanchez-Perez, Alexander F. Gelbukh, Grigori Sidorov: Adaptive Algorithm for Plagiarism Detection: The Best-Performing Approach at PAN 2014 Text Alignment Competition. CLEF 2015: 402-413"""
@@ -773,7 +774,7 @@ def tokenize(text, voc = {}, offsets = [], sents = [], rem_sw = 0):
 MAIN CLASS
 """
 class SGSPLAG:
-    def __init__(self, susp_text, src_text, parameters):
+    def __init__(self, parameters):
         """ Parameters. """
         self.th1 = parameters['th1']
         self.th2 = parameters['th2']
@@ -795,8 +796,8 @@ class SGSPLAG:
         self.src_gap_summary = parameters['src_gap_summary']
         self.susp_gap_summary = parameters['src_gap_summary']
 
-        self.susp_text = susp_text
-        self.src_text = src_text
+        self.susp_text = []
+        self.src_text = []
         self.src_voc = {}
         self.susp_voc = {}
         self.src_offsets = []
@@ -805,6 +806,14 @@ class SGSPLAG:
         self.susp_sents = []
         self.detections = None
 
+    def load_susp(self, susp_text):
+        """Load suspicious document data"""
+        self.susp_text = susp_text
+
+    def load_src(self, src_text):
+        """Load suspicious document data"""
+        self.src_text = src_text
+
     def process(self):
         """
         DESCRIPTION: Process the plagiarism pipeline
@@ -812,6 +821,14 @@ class SGSPLAG:
         OUTPUT: type_plag <int> - Verbatim plagarism flag
                 summary_flag <int> - Summary plagarism flag
         """
+        self.src_voc = {}
+        self.susp_voc = {}
+        self.src_offsets = []
+        self.susp_offsets = []
+        self.src_sents = []
+        self.susp_sents = []
+        self.detections = None
+
         self.preprocess()
         self.detections, type_plag, summary_flag = self.compare()
         return type_plag, summary_flag
@@ -1031,7 +1048,8 @@ def read_document(addr, encoding = 'utf-8'):
     fid = codecs.open(addr, 'r', encoding)
     text = fid.read()
     fid.close()
-    return text
+    le = len(text)
+    return text, le
 
 class save_results():
     def __init__(self,table_title,file_name):
@@ -1068,8 +1086,7 @@ class save_results():
         html.close()
 
     def make_title(self):
-        self.msg = self.msg + '<h1 style="text-align:center;color:#6fb0db;">'
-        self.msg = self.msg + self.table_title + '</h1>\n'
+        self.msg = '<h1>' + self.msg + self.table_title + '</h1>\n'
 
     def make_table_header(self):
         self.msg = self.msg + self.wrapper
@@ -1077,22 +1094,58 @@ class save_results():
         self.msg = self.msg + self.rowh
         self.msg = self.msg + self.cell + ' Documento comparado ' + self.divf
         self.msg = self.msg + self.cell + ' Caracteres ' + self.divf
+        self.msg = self.msg + self.cell + ' Porcentaje ' + self.divf
         self.msg = self.msg + self.cell + ' Offset ' + self.divf
         self.msg = self.msg + self.cell + ' Documento BD ' + self.divf
         self.msg = self.msg + self.cell + ' Caracteres ' + self.divf
+        self.msg = self.msg + self.cell + ' Porcentaje ' + self.divf
         self.msg = self.msg + self.cell + ' Offset ' + self.divf
+        self.msg = self.msg + self.cell + ' Texto Plagiado ' + self.divf
         self.msg = self.msg + self.divf
 
-    def add_data(self,susp,doc,features):
+    def add_data(self, susp, susp_len, src, src_len, features):
+        each_file_name = 'resultados/' + susp + '-' + src + '.html'
+
+        each_html = open(each_file_name,'w')
+        each_data = """<html lang="ES-mx">
+        <head>
+          <meta charset="utf-8">
+          <link rel="stylesheet" type="text/css" href="../config/table.css">
+        </head>
+        <body>
+        </br>
+        """
+        each_data = each_data + '<a href="../' + self.file_name + '"> << REGRESAR </a></br>'
+
+        disp_text_src = []
+        disp_text_susp = []
+
         for f in features:
+            #Number of characters in susp and src documents
+            car_susp = f[0][1] - f[0][0];
+            car_src = f[1][1] - f[1][0];
+            #Percentage of plagiarism in susp and src documents
+            perc_susp = car_susp * 100 / susp_len
+            perc_src = car_src * 100 / src_len
+
             self.data = self.data + self.row
             self.data = self.data + self.cell + susp + self.divf
-            self.data = self.data + self.cell + str(f[0][1] - f[0][0]) + self.divf
+            self.data = self.data + self.cell + str(car_susp) + self.divf
+            self.data = self.data + self.cell + str(perc_susp) + '%' + self.divf
             self.data = self.data + self.cell + str(f[0][0]) + self.divf
-            self.data = self.data + self.cell + doc + self.divf
-            self.data = self.data + self.cell + str(f[1][1] - f[1][0]) + self.divf
+            self.data = self.data + self.cell + src + self.divf
+            self.data = self.data + self.cell + str(car_src) + self.divf
+            self.data = self.data + self.cell + str(perc_src) + '%' + self.divf
             self.data = self.data + self.cell + str(f[1][0]) + self.divf
+            self.data = self.data + self.cell + '<a href="' + each_file_name + '">Ver >></a>' + self.divf
             self.data = self.data + self.divf
+
+            for x in range()
+
+        each_html.write( each_data )
+        each_html.close()
+
+
 
 
 '''
@@ -1106,32 +1159,41 @@ if __name__ == "__main__":
     The file of pairs is a plain text file where each line represent a pair of
     documents <supicious-document-name.txt> <source-document-name.txt>: suspicious-document00001.txt source-document00294.txt
     """
-        html = save_results('RESULTADOS','Resultados.html')
-        if len(sys.argv) >= 1:
-
+    html = save_results('RESULTADOS','Resultados.html')
+    if len(sys.argv) >= 1:
+        #start timer
         t1 = time.time()
+        #suspicious document load
         susp = sys.argv[1]
-        #if outdir[-1] != "/":
-        #    outdir += "/"
+        susp_dir = 'documentos/' + susp
+        susp_text, susp_len = read_document(susp_dir)
+
+        #read config parameters
         lines = open('docs_comparar', 'r').readlines()
         parameters = read_parameters('config/settings.xml')
+        #out = modify_parameters(sys.argv[5:], parameters, 'config/settings.xml')
         print parameters
-        out = modify_parameters(sys.argv[5:], parameters, 'config/settings.xml')
-        print parameters
+
+        # START SGSPLAG
+        sgsplag_obj = SGSPLAG( parameters )
+        sgsplag_obj.load_susp( susp_text )
+
+        #Start comparison with documents in the database directory
         for line in lines:
             print line
+            #ata base document load
             src = ''.join( line.split() )
-            susp_dir = 'documentos/' + susp
             src_dir = 'bd-documentos/' + src
-            #sgsplag_obj = SGSPLAG(read_document(os.path.join('documentos', susp)), read_document(os.path.join('bd-documentos', src)), parameters)
-            sgsplag_obj = SGSPLAG(read_document(susp_dir), read_document(src_dir), parameters)
+            src_text, src_len = read_document(src_dir)
+
+            sgsplag_obj.load_src( src_text )
+
             type_plag, summary_flag = sgsplag_obj.process()
-            #msg = html_output(susp, src, sgsplag_obj.detections, msg)
-            html.add_data(susp, src, sgsplag_obj.detections)
+
+            html.add_data(susp, susp_len, src, src_len, sgsplag_obj.detections)
+
         t2 = time.time()
-
         html.save()
-
         print t2 - t1
     else:
         print('\n'.join(["Unexpected number of commandline arguments.", "Usage: ./pan13-plagiarism-text-alignment-example.py {pairs} {src-dir} {susp-dir} {out-dir}"]))

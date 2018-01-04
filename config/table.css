@@ -62,3 +62,14 @@ body {
     display: block;
   }
 }
+
+a{
+    text-decoration: none !important;
+    font-weight: bold;
+    color: #4287b4;
+}
+
+h1{
+  text-align:center;
+  color:#6fb0db;
+}
