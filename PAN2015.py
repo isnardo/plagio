@@ -1,12 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 __modified__ = 'Isnardo Reducindo'
-__email__ = 'isnardo.reducindo@uaslp.co.mx'
+__email__ = 'isnardo.reducindo@uaslp.mx'
 __author__ = 'Miguel Angel Sanchez Perez'
 __email__ = 'masp1988@hotmail.com'
 __version__ = '2.0'
 
-"""(1) Miguel A. Sanchez-Perez, Alexander F. Gelbukh, Grigori Sidorov: Adaptive Algorithm for Plagiarism Detection: The Best-Performing Approach at PAN 2014 Text Alignment Competition. CLEF 2015: 402-413"""
+"""(2) Reducindo, I., Rivera, L. R., Rivera, J., Olvera, M.A., Integración de plataforma LMS y algoritmo de código abierto para detección y prevención de plagio en Educación Superior. Rev. gen. inf. doc. 27(2) 2017: 299-315 """
+"""(1) Sanchez-Perez, M.A., Gelbukh, A.F., Sidorov, G., Dynamically adjustable approach through obfuscation type recognition. Working Notes of CLEF 2015 - Conference and Labs of the Evaluation forum, Toulouse, France, September 8-11, 2015. CEUR Workshop Proceedings, vol. 1391, CEUR-WS.org, 2015 """
 
 import os
 import sys
@@ -1072,21 +1073,21 @@ class save_results():
         self.wrapper = '<div class="wrapper"> \n'
         self.table = '<div class="table"> \n'
 
-
+        self.developer = '</br><h4>Developed by <a href="http://galia.fc.uaslp.mx/~isnardo/"> Isnardo Reducindo</a> for research purposes'
+        self.developer = self.developer + '</br>Contact <a href="mailto:isnardo.reducindo@uaslp.mx">isnardo.reducindo@uaslp.mx</a>'
+        self.developer = self.developer + '</br>Algorithm <a href="https://www.gelbukh.com/plagiarism-detection/PAN-2015/"> Sanchez-Perez et al. 2015 </a></h4>'
         self.data = ''
 
     def save(self):
-        self.make_title()
+        self.msg = '<h1>' + self.msg + self.table_title + '</h1>\n'
         self.make_table_header()
         self.msg = self.msg + self.data
         self.msg = self.msg + self.divf + self.divf
+        self.msg = self.msg + self.developer
         self.msg = self.msg + '</body>\n</html>'
         html = open(self.file_name,'w')
         html.write(self.msg)
         html.close()
-
-    def make_title(self):
-        self.msg = '<h1>' + self.msg + self.table_title + '</h1>\n'
 
     def make_table_header(self):
         self.msg = self.msg + self.wrapper
@@ -1095,11 +1096,9 @@ class save_results():
         self.msg = self.msg + self.cell + ' Documento comparado ' + self.divf
         self.msg = self.msg + self.cell + ' Caracteres ' + self.divf
         self.msg = self.msg + self.cell + ' Porcentaje ' + self.divf
-        self.msg = self.msg + self.cell + ' Offset ' + self.divf
         self.msg = self.msg + self.cell + ' Documento BD ' + self.divf
         self.msg = self.msg + self.cell + ' Caracteres ' + self.divf
         self.msg = self.msg + self.cell + ' Porcentaje ' + self.divf
-        self.msg = self.msg + self.cell + ' Offset ' + self.divf
         self.msg = self.msg + self.cell + ' Texto Plagiado ' + self.divf
         self.msg = self.msg + self.divf
 
@@ -1122,54 +1121,102 @@ class save_results():
         count_susp = 0;
         count_src = 0;
 
+        r = 255
+        g = 255
+        b = 0
+
+        car_susp = 0
+        car_src = 0
+
+        susp_ini = []
+        susp_fin = []
+        src_ini = []
+        src_fin = []
+
+        #Sorting plagiums
         for f in features:
+            susp_ini.append( f[0][0] )
+            susp_fin.append( [f[0][1], g] )
+            src_ini.append( f[1][0])
+            src_fin.append( [f[1][1], g] )
+            g = g - 20
+
+        susp_ini.sort()
+        susp_fin.sort()
+        src_ini.sort()
+        src_fin.sort()
+
+        for x in range(0,len(susp_ini)):
             #Number of characters in susp and src documents
-            car_susp = f[0][1] - f[0][0];
-            car_src = f[1][1] - f[1][0];
+            f_car_susp = susp_fin[x][0] - susp_ini[x]
+            f_car_src = src_fin[x][0] - src_ini[x]
             #Percentage of plagiarism in susp and src documents
-            perc_susp = car_susp * 100 / susp_len
-            perc_src = car_src * 100 / src_len
+            perc_susp = f_car_susp * 100 / susp_len
+            perc_src = f_car_src * 100 / src_len
+
+            #Define background color
+            susp_color = str(r)+','+str(susp_fin[x][1])+','+str(b)
+            src_color = str(r)+','+str(src_fin[x][1])+','+str(b)
 
             #Generate text to show in comparison window
-            text_aux = susp_text[ count_susp:f[0][0] ]
-            html_susp = html_susp + ''.join( text_aux ).encode('utf-8')
-            text_aux = susp_text[ f[0][0]:f[0][1] ]
-            html_susp = html_susp + '<span style="background-color:yellow;">'
+            if( count_susp < susp_ini[x]):
+                text_aux = susp_text[ count_susp:susp_ini[x] ]
+                html_susp = html_susp + ''.join( text_aux ).encode('utf-8')
+            text_aux = susp_text[ susp_ini[x]:susp_fin[x][0] ]
+            html_susp = html_susp + '<span style="background-color:rgb('+susp_color
+            html_susp = html_susp + ');" title="' + str(perc_susp) + '%, '
+            html_susp = html_susp + str(f_car_susp) + ' caracteres, '
+            html_susp = html_susp + str(susp_ini[x]) + ' offset" >'
             html_susp = html_susp + ''.join( text_aux ).encode('utf-8')
             html_susp = html_susp + '</span>'
-            count_susp = f[0][1]
+            count_susp = susp_fin[x][0]
 
-            text_aux = src_text[ count_src:f[1][0] ]
-            html_src = html_src + ''.join( text_aux ).encode('utf-8')
-            text_aux = src_text[ f[1][0]:f[1][1] ]
-            html_src = html_src + '<span style="background-color:yellow;">'
+            if( count_src < src_ini[x]):
+                text_aux = src_text[ count_src:src_ini[x] ]
+                html_src = html_src + ''.join( text_aux ).encode('utf-8')
+            text_aux = src_text[ src_ini[x]:src_fin[x][0] ]
+            html_src = html_src + '<span style="background-color:rgb('+src_color
+            html_src = html_src + ');" title="' + str(perc_src) + '%, '
+            html_src = html_src + str(f_car_src) + ' caracteres, '
+            html_src = html_src + str(src_ini[x]) + ' offset" >'
             html_src = html_src + ''.join( text_aux ).encode('utf-8')
             html_src = html_src + '</span>'
-            count_src = f[1][1]
+            count_src = src_fin[x][0]
 
-            self.data = self.data + self.row
-            self.data = self.data + self.cell + susp + self.divf
-            self.data = self.data + self.cell + str(car_susp) + self.divf
-            self.data = self.data + self.cell + str(perc_susp) + '%' + self.divf
-            self.data = self.data + self.cell + str(f[0][0]) + self.divf
-            self.data = self.data + self.cell + src + self.divf
-            self.data = self.data + self.cell + str(car_src) + self.divf
-            self.data = self.data + self.cell + str(perc_src) + '%' + self.divf
-            self.data = self.data + self.cell + str(f[1][0]) + self.divf
-            self.data = self.data + self.cell + '<a href="' + each_file_name + '">Ver >></a>' + self.divf
-            self.data = self.data + self.divf
+            car_susp = car_susp + f_car_susp
+            car_src = car_src + f_car_src
 
-        text_aux = src_text[ count_susp:susp_len ]
-        html_susp = html_susp + ''.join( text_aux ).encode('utf-8')
+            #r = r - 25
+            #g = g - 20
+            #b = b + 25
 
-        text_aux = src_text[ count_src:src_len ]
-        html_susp = html_src + ''.join( text_aux ).encode('utf-8')
+        perc_susp = car_susp * 100 / susp_len
+        perc_src = car_src * 100 / src_len
+
+        self.data = self.data + self.row
+        self.data = self.data + self.cell + susp + self.divf
+        self.data = self.data + self.cell + str(car_susp) + self.divf
+        self.data = self.data + self.cell + str(perc_susp) + '%' + self.divf
+        self.data = self.data + self.cell + src + self.divf
+        self.data = self.data + self.cell + str(car_src) + self.divf
+        self.data = self.data + self.cell + str(perc_src) + '%' + self.divf
+        self.data = self.data + self.cell + '<a href="' + each_file_name + '">Ver >></a>' + self.divf
+        self.data = self.data + self.divf
+
+        if( count_susp < susp_len ):
+            text_aux = susp_text[ count_susp:susp_len ]
+            html_susp = html_susp + ''.join( text_aux ).encode('utf-8')
+
+        if( count_src < src_len ):
+            text_aux = src_text[ count_src:src_len ]
+            html_src = html_src + ''.join( text_aux ).encode('utf-8')
 
         each_data = self.wrapper + each_data + self.table + self.rowh
-        each_data = each_data + self.cell + ' Texto Comparado ' + self.divf
-        each_data = each_data + self.cell + ' Texto Base de Datos ' + self.divf + self.divf
+        each_data = each_data + self.cell + ' Texto Comparado: ' + susp + self.divf
+        each_data = each_data + self.cell + ' Texto BD: ' + src + self.divf + self.divf
         each_data = each_data + self.row + self.cell + html_susp + self.divf
         each_data = each_data + self.cell + html_src + self.divf + self.divf + self.divf
+        each_data = each_data + self.developer
 
         each_html.write( each_data )
         each_html.close()

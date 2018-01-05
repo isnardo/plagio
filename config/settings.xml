@@ -36,7 +36,7 @@
 	</parameter>
 	<parameter name="verbatim_minlen">
 		<type>int</type>
-		<value>256</value>
+		<value>64</value>
 		<description>Minimum length in characters of common substring (using words) between both documents to consider to be a verbatim obfuscation case.</description>
 	</parameter>
 	<parameter name="src_size">
