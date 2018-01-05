@@ -1139,8 +1139,10 @@ class save_results():
             susp_fin.append( [f[0][1], g] )
             src_ini.append( f[1][0])
             src_fin.append( [f[1][1], g] )
+            #generate colors
             g = g - 20
 
+        #Sort plagied texts indices
         susp_ini.sort()
         susp_fin.sort()
         src_ini.sort()
@@ -1182,13 +1184,10 @@ class save_results():
             html_src = html_src + ''.join( text_aux ).encode('utf-8')
             html_src = html_src + '</span>'
             count_src = src_fin[x][0]
-
+            #Adding plagied characters
             car_susp = car_susp + f_car_susp
             car_src = car_src + f_car_src
 
-            #r = r - 25
-            #g = g - 20
-            #b = b + 25
 
         perc_susp = car_susp * 100 / susp_len
         perc_src = car_src * 100 / src_len
