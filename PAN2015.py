@@ -1078,6 +1078,8 @@ class save_results():
         self.developer = self.developer + '</br>Algorithm <a href="https://www.gelbukh.com/plagiarism-detection/PAN-2015/"> Sanchez-Perez et al. 2015 </a></h4>'
         self.data = ''
 
+        self.colors = [[255, 160, 122],[255, 127, 80],[255, 99, 71],[255, 69, 0],[255, 140, 0],[255, 165, 0],[255, 215, 0],[189, 183, 107],[255, 255, 0],[240, 230, 140],[255, 255, 224],[216, 191, 216],[221, 160, 221],[238, 130, 238],[218, 112, 214],[106, 90, 205],[123, 104, 238],[72, 61, 139]]
+
     def save(self):
         self.msg = '<h1>' + self.msg + self.table_title + '</h1>\n'
         self.make_table_header()
@@ -1121,10 +1123,6 @@ class save_results():
         count_susp = 0;
         count_src = 0;
 
-        r = 255
-        g = 255
-        b = 0
-
         car_susp = 0
         car_src = 0
 
@@ -1133,14 +1131,14 @@ class save_results():
         src_ini = []
         src_fin = []
 
+        k = 0
         #Sorting plagiums
         for f in features:
             susp_ini.append( f[0][0] )
-            susp_fin.append( [f[0][1], g] )
+            susp_fin.append( [f[0][1], k] )
             src_ini.append( f[1][0])
-            src_fin.append( [f[1][1], g] )
-            #generate colors
-            g = g - 20
+            src_fin.append( [f[1][1], k] )
+            k = k + 1
 
         #Sort plagied texts indices
         susp_ini.sort()
@@ -1157,8 +1155,10 @@ class save_results():
             perc_src = f_car_src * 100 / src_len
 
             #Define background color
-            susp_color = str(r)+','+str(susp_fin[x][1])+','+str(b)
-            src_color = str(r)+','+str(src_fin[x][1])+','+str(b)
+            color = self.colors[susp_fin[x][1]]
+            susp_color = str(color[0])+','+str(color[1])+','+str(color[2])
+            color = self.colors[src_fin[x][1]]
+            src_color =  str(color[0])+','+str(color[1])+','+str(color[2])
 
             #Generate text to show in comparison window
             if( count_susp < susp_ini[x]):
